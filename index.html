@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#d59a55">
+<meta name="color-scheme" content="light">
+<title>ROUTE 4T · MIKA'S JOURNEY</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="styles.css?v=248">
+</head>
+<body>
+<div class="stars" aria-hidden="true"></div>
+<main class="app-shell">
+
+<section id="welcome" class="screen active welcome-screen" aria-labelledby="welcomeTitle">
+  <div class="welcome-reference-shell welcome-v241-stack">
+    <h1 id="welcomeTitle" class="sr-only">Route 4T — Mika’s Journey with 40 Exits</h1>
+    <div class="welcome-v241-photo-frame"><img class="welcome-photo-new" src="welcome-mika-new.jpg" alt="Mika"></div>
+    <img class="welcome-v241-title" src="home-header-autumn.png" alt="Route 4T — Mika’s Journey with 40 Exits. Solve daily puzzles, unlock surprise gifts, beat the scoreboard.">
+    <img class="welcome-v241-rules" src="welcome-rules-autumn.png" alt="Rules of the Road">
+    <button id="enterRouteMobile" class="welcome-v241-honk" type="button" aria-label="Honk the horn to enter Route 4T">
+      <img src="welcome-honk-only.png" alt="HONK">
+    </button>
+  </div>
+</section>
+
+<section id="home" class="screen">
+  <header class="masthead project40-header">
+    <img class="home-header-art" src="home-header-autumn.png" alt="Route 4T — Mika’s Journey with 40 Exits. Solve Daily Puzzles, Unlock Surprise Gifts, Beat the Scoreboard — Ready for the Game?">
+  </header>
+
+  <div class="home-sticky-stack">
+  <section class="score-card" aria-label="Scoreboard">
+    <div class="score-main">
+      <div class="score-player"><small>MIKA</small><strong id="mikaScore">0</strong></div>
+      <div class="score-divider"><small>VS.</small><span>VS</span></div>
+      <div class="score-player"><small>THE MYSTERY</small><strong id="mysteryScore">0</strong></div>
+    </div>
+    <div class="score-stats">
+      <span class="stat-item stat-solved"><span class="stat-icon" aria-hidden="true">🧩</span><span class="stat-label">Solved</span><b id="solvedCount">0</b></span>
+      <span class="stat-item stat-flags"><span class="stat-icon" aria-hidden="true">⚑</span><span class="stat-label">White Flags</span><b id="flagCount">0</b></span>
+      <span class="stat-item stat-first"><span class="stat-icon" aria-hidden="true">◎</span><span class="stat-label">First-Try</span><b id="firstTryCount">0</b></span>
+      <span class="stat-item stat-current"><span class="stat-icon" aria-hidden="true">🔥</span><span class="stat-label">Current Streak</span><b id="streakCount">0</b></span>
+      <span class="stat-item stat-best"><span class="stat-icon" aria-hidden="true">🏆</span><span class="stat-label">Best Streak</span><b id="bestStreakCount">0</b></span>
+    </div>
+  </section>
+  <div class="section-heading">YOUR EXITS</div>
+  </div>
+  <div id="dayGrid" class="day-grid"></div>
+  <p id="emptyState" class="empty-state hidden">Your first mystery has not been revealed yet.</p>
+
+</section>
+
+<section id="puzzle" class="screen">
+  <button class="home-link" data-home>← HOME</button>
+  <div id="dayEyebrow" class="day-eyebrow"></div>
+  <div class="secret-mark">✦</div>
+
+  <div class="puzzle-card">
+    <div class="card-label">TODAY'S MYSTERY</div>
+    <div id="puzzleText" class="question"></div>
+  </div>
+
+  <button id="scrollCue" class="scroll-cue" type="button" aria-label="Continue to answer">
+    <span>Continue to answer</span>
+    <span class="chevron">⌄</span>
+  </button>
+
+  <div id="answerArea" class="answer-area">
+    <input id="answerInput" type="text" placeholder="3 GUESSES — ENTER YOUR ANSWER" autocomplete="off">
+    <button id="submitBtn" class="primary">UNLOCK THE MYSTERY</button>
+
+    <div id="statusPanel" class="status-panel">
+      <p id="feedback" class="feedback"></p>
+      <p id="attempts" class="attempts"></p>
+    </div>
+
+    <button id="giveUpBtn" class="giveup hidden">I GIVE UP — I'M SO OLD… I'M ABOUT TO TURN 40! 😂</button>
+    <button class="home-button" data-home>HOME</button>
+  </div>
+</section>
+
+<section id="review" class="screen review-screen">
+  <button class="home-link" data-home>← HOME</button>
+  <div id="reviewEyebrow" class="day-eyebrow"></div>
+  <div class="review-badge">ALREADY SOLVED ✅</div>
+  <div class="puzzle-card review-question-card">
+    <div class="card-label">THE MYSTERY</div>
+    <div id="reviewQuestion" class="question"></div>
+  </div>
+  <div class="review-answer-card">
+    <div class="review-answer-label">CORRECT ANSWER</div>
+    <div id="reviewAnswer" class="review-answer"></div>
+    <div id="reviewOutcome" class="review-outcome"></div>
+  </div>
+  <button id="reviewGiftBtn" class="primary">VIEW YOUR GIFT 🎁</button>
+  <button class="home-button" data-home>HOME</button>
+</section>
+
+<section id="confirmGiveUp" class="screen">
+  <button class="home-link" data-home>← HOME</button>
+  <div class="secret-mark">✦</div>
+  <div class="day-eyebrow">ONE LAST CHANCE</div>
+  <h2>ARE YOU SURE?</h2>
+  <div class="puzzle-card compact">
+    <p>This EXIT becomes a white flag. 🏳️</p>
+  </div>
+  <button id="tryAgainBtn" class="secondary">LET ME TRY AGAIN</button>
+  <button id="saveMeBtn" class="giveup">YES, SURRENDER 😂</button>
+</section>
+
+<section id="surrender" class="screen">
+  <button class="home-link" data-home>← HOME</button>
+  <div class="secret-mark">🏳</div>
+  <div class="day-eyebrow">MYSTERY REVEALED</div>
+  <h2>THE MYSTERY WINS THIS ONE</h2>
+  <p class="muted">The answer was…</p>
+  <div id="answerReveal" class="answer-reveal"></div>
+  <p class="muted">Don't worry. We won't tell anyone. 🤫</p>
+  <button id="surrenderSurpriseBtn" class="primary">CLAIM YOUR CONSOLATION GIFT</button>
+</section>
+
+
+<section id="video" class="screen">
+  <button class="home-link" data-home>← HOME</button>
+  <div class="gift-mark" aria-hidden="true">🎁</div>
+  <div id="videoEyebrow" class="day-eyebrow"></div>
+  <h2 id="solvedHeading">✓ YOU SOLVED IT!</h2>
+<p id="solvedSubheading" class="muted">Another step closer to 40…</p>
+  <h2 id="giftHeading">ENJOY TODAY'S GIFT</h2>
+  <p id="giftFrom" class="gift-from"></p>
+  <button id="watchBtn" class="primary">OPEN TODAY'S SURPRISE</button>
+  <div class="divider"><span></span><em>OR</em><span></span></div>
+  <div class="qr-wrap"><img id="qrImage" alt="QR code for today's video"></div>
+  <p class="muted small">On another device? Scan the code with your phone.</p>
+  <button class="home-button" data-home>HOME</button>
+</section>
+
+
+<section id="finale" class="screen finale-screen">
+  <button class="home-link" data-home>← HOME</button>
+  <div id="celebrationLayer" class="celebration-layer" aria-hidden="true"></div>
+  <div class="finale-content">
+    <div class="finale-cake" aria-hidden="true">🎂</div>
+    <div class="day-eyebrow">EXIT 40 · THE FINAL DESTINATION</div>
+    <h2 class="birthday-title">🎉 HAPPY BIRTHDAY, MIKA! 🎉</h2>
+    <p class="birthday-subtitle">You made it to 40.</p>
+    <p class="muted">Forty days. Forty moments. One unforgettable journey.</p>
+    <div class="gift-mark finale-gift" aria-hidden="true">🎁</div>
+    <p id="birthdayGiftFrom" class="gift-from"></p>
+    <button id="birthdaySurpriseBtn" class="primary">OPEN YOUR BIRTHDAY SURPRISE</button>
+    <div class="divider"><span></span><em>OR</em><span></span></div>
+    <div class="qr-wrap"><img id="birthdayQrImage" alt="QR code for your birthday surprise"></div>
+    <p class="muted small">On another device? Scan the code with your phone.</p>
+    <button class="home-button" data-home>HOME</button>
+  </div>
+</section>
+
+</main>
+<script src="app.js?v=248"></script>
+</body>
+</html>

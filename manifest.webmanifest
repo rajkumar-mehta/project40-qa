@@ -1,0 +1,21 @@
+{
+  "name": "Route 4T \u2014 Mika's Journey",
+  "short_name": "Route 4T",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f2d6a6",
+  "theme_color": "#d59a55",
+  "description": "A forty-day mystery made for Mika.",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
