@@ -58,3 +58,11 @@ Known content placeholders retained by design: EXIT 25, 26, 36 and 40 currently 
 - A wrong bonus 4th attempt immediately records surrender; there is no repeat 3-attempt reset.
 - Existing PROD progress format and completed 1–3 attempt results remain valid.
 - HONK, sticky UI, artwork, puzzles/videos, and trusted-time logic are unchanged.
+
+
+## v3.01 QA — EXIT 40 regression fixes
+- v2.50 objectives remain unchanged and are carried forward.
+- Fixed text contrast across puzzle/review/result/gift/finale screens for both light and dark device themes.
+- EXIT 40 legacy pale lavender finale text is explicitly replaced with high-contrast dark brown.
+- Reopening a completed EXIT 40 keeps the question/answer review, shows FINAL VIDEO COMING SOON when the final video is still TBD, and replays balloons/confetti.
+- No change to QA-only preview isolation, trusted-time protection, Formspree frequency/labels, saved-game keys, HONK, sticky scoreboard, EXIT layout, or the one-time bonus 4th attempt.

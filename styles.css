@@ -4354,3 +4354,63 @@ button {
 /* Keep the approved visible press/release animation. */
 #welcome .welcome-v241-honk:active{transform:translateY(3px) scale(.975)!important;}
 #welcome .welcome-v241-honk.honked{animation:r4tHonkPress .34s cubic-bezier(.2,.8,.25,1) both!important;}
+
+
+/* ======================================================================
+   ROUTE 4T v3.01 QA — fixed-theme text contrast audit + EXIT 40 replay
+   Same palette in light/dark device themes; layout/gameplay styling unchanged.
+   ====================================================================== */
+:root,html{color-scheme:only light!important;}
+
+/* Shared navigation / labels across every EXIT screen. */
+#puzzle .home-link,#review .home-link,#confirmGiveUp .home-link,#surrender .home-link,#video .home-link,#finale .home-link,
+#puzzle .day-eyebrow,#review .day-eyebrow,#confirmGiveUp .day-eyebrow,#surrender .day-eyebrow,#video .day-eyebrow,#finale .day-eyebrow{
+  color:#5b3823!important;opacity:1!important;
+}
+
+/* Puzzle + review text must remain dark on the cream/fall canvas in either OS theme. */
+#puzzle .card-label,#review .card-label{color:#7a421f!important;opacity:1!important;}
+#puzzle .question,#review .question,#review .review-answer,#review .review-outcome,
+#review .review-answer-label,#review .review-badge{
+  color:#302117!important;opacity:1!important;text-shadow:none!important;
+}
+#puzzle .scroll-cue,#puzzle .attempts{color:#5b3b27!important;opacity:1!important;}
+#puzzle .feedback.bad{color:#7a2f1e!important;opacity:1!important;}
+#answerInput{color:#2d2017!important;background:rgba(255,255,255,.72)!important;}
+#answerInput::placeholder{color:#65513e!important;opacity:1!important;}
+
+/* Confirmation, surrender and success copy. */
+#confirmGiveUp h2,#confirmGiveUp .puzzle-card.compact p,
+#surrender h2,#surrender .muted,#surrender .answer-reveal,
+#video h2,#video .muted,#video .gift-from,#video .gift-from-name{
+  opacity:1!important;text-shadow:none!important;
+}
+#confirmGiveUp h2{color:#5b321e!important;}
+#confirmGiveUp .puzzle-card.compact p{color:#402b1d!important;}
+#surrender h2{color:#56301d!important;}
+#surrender .muted{color:#5b402e!important;}
+#surrender .answer-reveal{color:#512b19!important;}
+#video h2{color:#5a321e!important;}
+#video .muted{color:#5d422f!important;}
+#video .gift-from,#video .gift-from-name{color:#6a351f!important;}
+
+/* EXIT 40: explicitly replace the old pale lavender legacy colors. */
+#finale .birthday-title{color:#542c1a!important;opacity:1!important;text-shadow:none!important;}
+#finale .birthday-subtitle{color:#6a351f!important;opacity:1!important;text-shadow:none!important;font-weight:600!important;}
+#finale .muted{color:#5c402d!important;opacity:1!important;text-shadow:none!important;}
+#finale #birthdayGiftFrom,#finale #birthdayGiftFrom .gift-from-name{
+  color:#6a351f!important;opacity:1!important;text-shadow:none!important;
+}
+
+/* Disabled video placeholders remain intentionally readable instead of fading out. */
+#video button.primary:disabled,#finale button.primary:disabled,#review #reviewGiftBtn:disabled{
+  color:#fff8e8!important;opacity:.82!important;filter:none!important;-webkit-text-fill-color:#fff8e8!important;
+}
+
+/* HOME/EXIT text already uses a fixed palette; reassert critical foregrounds so
+   browser dark-mode heuristics cannot recolor them. */
+#home .day-card,#home .day-card .date,#home .day-card .state,#home .day-card .state-chevron,
+#home .score-card,#home .section-heading{opacity:1!important;}
+#home .day-card .date{color:#fff4df!important;}
+#home .day-card .state{color:#ffffff!important;}
+#home .day-card .state-chevron{color:#fff2bd!important;}

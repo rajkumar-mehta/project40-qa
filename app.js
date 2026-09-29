@@ -1289,10 +1289,30 @@ function openReview(day,result){
    ?`You already cleared this Exit in ${result.attempts} attempt${result.attempts===1?"":"s"}. Your score is locked.`
    :"You already completed this Exit. Your white flag and score are locked.";
  const gift=$("reviewGiftBtn");
- gift.textContent="VIEW YOUR GIFT 🎁";
- gift.style.display=hasVideo(day)?"":"none";
- gift.onclick=()=>result.outcome==="solved"?(day.day===FINAL_EXIT?openBirthdayFinale():openSurprise(true)):(day.day===FINAL_EXIT?openBirthdayFinale():openSurprise(false));
+ const isFinal=day.day===FINAL_EXIT;
+ const available=hasVideo(day);
+ gift.disabled=false;
+ if(isFinal){
+   // Completed EXIT 40 should still feel like the finale while letting Mika
+   // reread the puzzle and answer. Keep the final-video placeholder visible
+   // even before the video URL is supplied, and replay the celebration.
+   gift.style.display="";
+   gift.textContent=available?"VIEW YOUR BIRTHDAY SURPRISE 🎁":"FINAL VIDEO COMING SOON";
+   gift.disabled=!available;
+   gift.onclick=available?()=>openBirthdayFinale():null;
+ }else{
+   gift.textContent="VIEW YOUR GIFT 🎁";
+   gift.style.display=available?"":"none";
+   gift.onclick=available?()=>result.outcome==="solved"?openSurprise(true):openSurprise(false):null;
+ }
  show("review");
+ if(isFinal){
+   const reviewRun=celebrationRunId;
+   requestAnimationFrame(()=>requestAnimationFrame(()=>{
+     if(reviewRun!==celebrationRunId || !$("review")?.classList.contains("active")) return;
+     launchBirthdayCelebration("review");
+   }));
+ }
 }
 function isVisible(d){
  if(QA_SHOW_ALL_EXITS) return true;
@@ -1662,9 +1682,9 @@ function stopBirthdayCelebration(){
  const layer=$("celebrationLayer");
  if(layer) layer.innerHTML="";
 }
-function launchBirthdayCelebration(){
+function launchBirthdayCelebration(screenId="finale"){
  const layer=$("celebrationLayer");
- if(!layer || !$("finale")?.classList.contains("active")) return;
+ if(!layer || !$(screenId)?.classList.contains("active")) return;
 
  clearTimeout(celebrationCleanupTimer);
  const runId=++celebrationRunId;
@@ -1732,7 +1752,7 @@ function openBirthdayFinale(){
  const finaleRun=celebrationRunId;
  requestAnimationFrame(()=>requestAnimationFrame(()=>{
    if(finaleRun!==celebrationRunId || !$("finale")?.classList.contains("active")) return;
-   launchBirthdayCelebration();
+   launchBirthdayCelebration("finale");
  }));
 }
 
@@ -1849,7 +1869,7 @@ document.addEventListener("visibilitychange",()=>{
 if(navigator.storage?.persist) navigator.storage.persist().catch(()=>{});
 
 if("serviceWorker" in navigator){
- window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js?v=250").catch(()=>{}));
+ window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js?v=301").catch(()=>{}));
 }
 
 function syncDesktopFrame(){
