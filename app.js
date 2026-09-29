@@ -3,6 +3,12 @@ const QA_DISABLE_SEQUENCE = false; // PRODUCTION: sequential progression is ON.
 const MAX_ATTEMPTS = 3;
 const FINAL_EXIT = 40;
 const FORMSPREE_ENDPOINT = "https://formspree.io/f/mjykazrp";
+// Environment-aware email subject label.
+// QA custom domain and GitHub Pages fallback are labeled QA; Route4T.com is labeled PROD.
+const EMAIL_ENV_LABEL = (
+  location.hostname.toLowerCase() === "qa.route4t.com" ||
+  location.pathname.toLowerCase().startsWith("/project40-qa")
+) ? "QA" : "PROD";
 
 // v2.47: unlocks use trusted Route4T server time, never the phone wall clock.
 // A server anchor advances with performance.now(), which is unaffected by manual
@@ -1237,12 +1243,12 @@ function notifyExitOpened(day){}
 function notifyAnswer(day,attempt,answer,result){}
 function notifySolved(day,attempt){
  sendGameEmailOnce(`solved-${day.day}`,{
-   _subject:`MIKA — Route 4T — EXIT ${day.day} SOLVED ✅`,event:"EXIT SOLVED",exit:day.day,date:day.displayDate,attempts:attempt,time:emailTime(),scoreboard:scoreSnapshot()
+   _subject:`[${EMAIL_ENV_LABEL}] MIKA — Route 4T — EXIT ${day.day} SOLVED ✅`,event:"EXIT SOLVED",exit:day.day,date:day.displayDate,attempts:attempt,time:emailTime(),scoreboard:scoreSnapshot()
  });
 }
 function notifySurrender(day){
  sendGameEmailOnce(`surrender-${day.day}`,{
-   _subject:`MIKA — Route 4T — EXIT ${day.day} WHITE FLAG 🏳️`,event:"EXIT SURRENDERED",exit:day.day,date:day.displayDate,time:emailTime(),scoreboard:scoreSnapshot()
+   _subject:`[${EMAIL_ENV_LABEL}] MIKA — Route 4T — EXIT ${day.day} WHITE FLAG 🏳️`,event:"EXIT SURRENDERED",exit:day.day,date:day.displayDate,time:emailTime(),scoreboard:scoreSnapshot()
  });
 }
 function showSequencePopup(required,requested){

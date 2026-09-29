@@ -39,3 +39,11 @@ Known content placeholders retained by design: EXIT 25, 26, 36 and 40 currently 
 - Updated future puzzle questions, accepted answers, photo mappings, sender metadata and YouTube URLs.
 - TBD videos remain unavailable rather than being treated as URLs.
 - No change to saved-game keys/format, scoreboard logic, trusted server time, Formspree final-only notification behavior, sequence gating, HONK, sticky UI, or EXIT styling.
+
+
+## v2.49 QA — Formspree subject labeling
+- Formspree frequency is unchanged: one final notification per completed EXIT.
+- QA subjects begin with [QA].
+- PROD subjects begin with [PROD] automatically after promotion.
+- No gameplay, scoring, progress-storage, trusted-time, sequence, HONK, sticky UI, puzzle, or visual changes.
+- QA CNAME is qa.route4t.com.
