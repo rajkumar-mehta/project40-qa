@@ -1,13 +1,17 @@
 const QA_SHOW_ALL_EXITS = false; // PRODUCTION: real date/unlock gating is ON.
 const QA_DISABLE_SEQUENCE = false; // PRODUCTION: sequential progression is ON.
-const MAX_ATTEMPTS = 3;
+const QA_HOST = location.hostname.toLowerCase() === "qa.route4t.com";
+// QA preview is deliberately hard-gated to the QA hostname. The same URL parameter
+// on route4t.com does nothing. Preview uses isolated progress and sends no email.
+const QA_PREVIEW_MODE = QA_HOST && new URLSearchParams(location.search).get("preview") === "1";
+const MAX_ATTEMPTS = 3; // normal guesses
+const MAX_TOTAL_ATTEMPTS = 4; // one optional bonus guess after the surrender warning
 const FINAL_EXIT = 40;
 const FORMSPREE_ENDPOINT = "https://formspree.io/f/mjykazrp";
 // Environment-aware email subject label.
 // QA custom domain and GitHub Pages fallback are labeled QA; Route4T.com is labeled PROD.
 const EMAIL_ENV_LABEL = (
-  location.hostname.toLowerCase() === "qa.route4t.com" ||
-  location.pathname.toLowerCase().startsWith("/project40-qa")
+  QA_HOST || location.pathname.toLowerCase().startsWith("/project40-qa")
 ) ? "QA" : "PROD";
 
 // v2.47: unlocks use trusted Route4T server time, never the phone wall clock.
@@ -803,10 +807,11 @@ const ANSWER_PLACEHOLDERS=[
  "3 GUESSES — ENTER YOUR ANSWER",
  "2 GUESSES LEFT — TRY AGAIN",
  "1 GUESS LEFT — MAKE IT COUNT",
+ "BONUS 4TH GUESS — LAST CHANCE",
  ""
 ];
 
-let currentDay=DAYS[0], attemptsUsed=0;
+let currentDay=DAYS[0], attemptsUsed=0, bonusAttemptActive=false;
 let wrongPopupAwaitingAck=false, wrongPopupSuppressClickUntil=0, wrongPopupReadyAt=0;
 let wrongPopupLockedValue="";
 let mobileWrongAckGuardUntil=0, wrongAckShieldTimer=0;
@@ -1119,6 +1124,10 @@ function visibilityNow(){
  const ms=trustedNowMs();
  return Number.isFinite(ms)?new Date(ms):null;
 }
+if(QA_PREVIEW_MODE){
+ try{document.title=`QA PREVIEW · ${document.title}`}catch{}
+}
+
 function show(id){
  if(id!=="finale") stopBirthdayCelebration();
  screens.forEach(s=>s.classList.toggle("active",s.id===id));
@@ -1136,14 +1145,18 @@ function show(id){
  },0);
 }
 function norm(v){return v.trim().toLowerCase().replace(/\s+/g," ")}
-const RESULT_PREFIX=IS_MIKA?"route4t_2026_exit_":"route4t_2026_raj_exit_";
-const BACKUP_KEY=IS_MIKA?"route4t_2026_progress_backup_v1":"route4t_2026_raj_progress_backup_v1";
+const RESULT_PREFIX=QA_PREVIEW_MODE
+ ? "route4t_qa_preview_exit_"
+ : (IS_MIKA?"route4t_2026_exit_":"route4t_2026_raj_exit_");
+const BACKUP_KEY=QA_PREVIEW_MODE
+ ? "route4t_qa_preview_progress_backup_v1"
+ : (IS_MIKA?"route4t_2026_progress_backup_v1":"route4t_2026_raj_progress_backup_v1");
 function key(day){return `${RESULT_PREFIX}${day}`}
 function validResult(r){
  if(!r || typeof r!=="object") return false;
- if(r.outcome==="solved") return Number.isInteger(r.attempts)&&r.attempts>=1&&r.attempts<=MAX_ATTEMPTS;
- if(r.outcome==="gave-up") return r.attempts===MAX_ATTEMPTS;
- if(r.outcome==="in-progress") return Number.isInteger(r.attemptsUsed)&&r.attemptsUsed>=0&&r.attemptsUsed<=MAX_ATTEMPTS;
+ if(r.outcome==="solved") return Number.isInteger(r.attempts)&&r.attempts>=1&&r.attempts<=MAX_TOTAL_ATTEMPTS;
+ if(r.outcome==="gave-up") return r.attempts===MAX_ATTEMPTS||r.attempts===MAX_TOTAL_ATTEMPTS;
+ if(r.outcome==="in-progress") return Number.isInteger(r.attemptsUsed)&&r.attemptsUsed>=0&&r.attemptsUsed<=MAX_TOTAL_ATTEMPTS;
  return false;
 }
 function readBackup(){try{const x=JSON.parse(localStorage.getItem(BACKUP_KEY)||"{}");return x&&typeof x==="object"?x:{}}catch{return {}}}
@@ -1172,17 +1185,14 @@ function saveResult(day,result){
  const backup=readBackup(); backup[day]=result; writeBackup(backup);
  return result;
 }
-function saveInProgress(day,count){return saveResult(day,{outcome:"in-progress",attemptsUsed:count,updatedAt:gameNowISO()})}
-function restartInProgress(day){
- const r={outcome:"in-progress",attemptsUsed:0,updatedAt:gameNowISO()};
- try{localStorage.setItem(key(day),JSON.stringify(r))}catch{}
- const backup=readBackup(); backup[day]=r; writeBackup(backup);
- return r;
+function saveInProgress(day,count,bonus=false){return saveResult(day,{outcome:"in-progress",attemptsUsed:count,bonusAttempt:!!bonus,updatedAt:gameNowISO()})}
+function grantBonusAttempt(day){
+ return saveResult(day,{outcome:"in-progress",attemptsUsed:MAX_ATTEMPTS,bonusAttempt:true,updatedAt:gameNowISO()});
 }
 
 function isFinalResult(r){return !!r&&(r.outcome==="solved"||r.outcome==="gave-up")}
 function isDateEligible(d){
- if(QA_SHOW_ALL_EXITS) return true;
+ if(QA_PREVIEW_MODE || QA_SHOW_ALL_EXITS) return true;
  const now=visibilityNow();
  if(!now) return false; // fail closed: never trust the phone clock
  if(d.unlockAt) return now.getTime()>=Date.parse(d.unlockAt);
@@ -1224,12 +1234,13 @@ async function deliverEmail(item){
  return false;
 }
 function sendGameEmailOnce(id,fields){
- if(!IS_MIKA) return;
+ if(!IS_MIKA || QA_PREVIEW_MODE) return;
  if(emailWasSent(id)) return;
  const item={id,fields:{...fields,_subject:fields._subject||"Route 4T Game Alert"}};
  deliverEmail(item).then(ok=>{if(!ok) queueEmail(item)});
 }
 async function flushEmailQueue(){
+ if(QA_PREVIEW_MODE) return;
  // Discard legacy OPEN/ANSWER queue entries from v2.46 so they cannot consume quota later.
  const q=readEmailQueue().filter(isFinalEmailItem);
  writeEmailQueue(q);
@@ -1423,7 +1434,7 @@ function stateMarkup(d){
  }
  if(!isDateEligible(d)) return {icon:lockIcon(false),rowClass:"locked-state",state:`<span class="locked">LOCKED</span>`};
  const required=nextRequiredDay();
- if(!QA_DISABLE_SEQUENCE && required && d.day!==required.day){
+ if(!(QA_DISABLE_SEQUENCE||QA_PREVIEW_MODE) && required && d.day!==required.day){
    return {icon:lockIcon(false),rowClass:"locked-state sequence-locked",state:`<span class="locked">COMPLETE EXIT ${required.day} FIRST</span>`};
  }
  return {icon:lockIcon(true),rowClass:"ready-state",state:`<span class="ready">READY TO UNLOCK</span>`};
@@ -1451,6 +1462,7 @@ function renderGrid(){
 function renderQuestion(day){renderQuestionInto("puzzleText",day)}
 function resetPuzzle(){
  attemptsUsed=0;
+ bonusAttemptActive=false;
  wrongPopupAwaitingAck=false;
  wrongPopupLockedValue="";
  $("answerInput").value="";$("answerInput").disabled=false;
@@ -1466,13 +1478,15 @@ function openDay(n){
  if(isFinalResult(existing)){openReview(requested,existing);return;}
  if(!isDateEligible(requested)) return;
  const required=nextRequiredDay();
- if(!QA_DISABLE_SEQUENCE && required && requested.day!==required.day){showSequencePopup(required,requested);return;}
+ if(!(QA_DISABLE_SEQUENCE||QA_PREVIEW_MODE) && required && requested.day!==required.day){showSequencePopup(required,requested);return;}
  currentDay=requested;
  resetPuzzle();
  if(existing?.outcome==="in-progress"){
-   attemptsUsed=Math.max(0,Math.min(MAX_ATTEMPTS,existing.attemptsUsed||0));
+   attemptsUsed=Math.max(0,Math.min(MAX_TOTAL_ATTEMPTS,existing.attemptsUsed||0));
+   bonusAttemptActive=!!existing.bonusAttempt;
    syncAnswerPlaceholder();
-   if(attemptsUsed>=MAX_ATTEMPTS){openConfirmGiveUpGuarded();return;}
+   if(attemptsUsed>=MAX_TOTAL_ATTEMPTS){completeSurrender(MAX_TOTAL_ATTEMPTS);return;}
+   if(attemptsUsed>=MAX_ATTEMPTS && !bonusAttemptActive){openConfirmGiveUpGuarded();return;}
  }
  $("dayEyebrow").textContent=`EXIT ${currentDay.day} · ${currentDay.displayDate.toUpperCase()}`;
  renderQuestion(currentDay);
@@ -1494,9 +1508,15 @@ function check(){
    return;
  }
  attemptsUsed++;
- saveInProgress(currentDay.day,attemptsUsed);
+ saveInProgress(currentDay.day,attemptsUsed,bonusAttemptActive);
  notifyAnswer(currentDay,attemptsUsed,raw,"wrong");
  input.value="";
+ if(bonusAttemptActive && attemptsUsed>=MAX_TOTAL_ATTEMPTS){
+   input.disabled=true;
+   $("submitBtn").disabled=true;
+   completeSurrender(MAX_TOTAL_ATTEMPTS);
+   return;
+ }
  const remaining=MAX_ATTEMPTS-attemptsUsed;
  const wrongMessage=wrongMessageForAttempt(attemptsUsed);
  syncAnswerPlaceholder();
@@ -1578,17 +1598,27 @@ window.addEventListener("resize",hidePhoneQr,{passive:true});
 window.addEventListener("orientationchange",()=>setTimeout(hidePhoneQr,120),{passive:true});
 hidePhoneQr();
 $("scrollCue").onclick=()=>$("answerArea").scrollIntoView({behavior:"smooth",block:"start"});
+function completeSurrender(attemptCount=MAX_ATTEMPTS){
+ saveResult(currentDay.day,{outcome:"gave-up",attempts:attemptCount,completedAt:gameNowISO()});
+ notifySurrender(currentDay);
+ $("answerReveal").textContent=currentDay.answerDisplay;
+ fitRevealAnswer(currentDay.answerDisplay);
+ show("surrender");
+}
 $("giveUpBtn").onclick=()=>show("confirmGiveUp");
 $("tryAgainBtn").onclick=e=>{
  if(Date.now()<confirmGiveUpReadyAt){e.preventDefault();e.stopPropagation();return;}
- restartInProgress(currentDay.day);
- resetPuzzle();show("puzzle");
+ grantBonusAttempt(currentDay.day);
+ resetPuzzle();
+ attemptsUsed=MAX_ATTEMPTS;
+ bonusAttemptActive=true;
+ syncAnswerPlaceholder();
+ $("attempts").textContent=isLikelyPhone()?"":"BONUS 4TH ATTEMPT — LAST CHANCE";
+ show("puzzle");
 };
 $("saveMeBtn").onclick=e=>{
  if(Date.now()<confirmGiveUpReadyAt){e.preventDefault();e.stopPropagation();return;}
- saveResult(currentDay.day,{outcome:"gave-up",attempts:MAX_ATTEMPTS,completedAt:gameNowISO()});
- notifySurrender(currentDay);
- $("answerReveal").textContent=currentDay.answerDisplay;fitRevealAnswer(currentDay.answerDisplay);show("surrender");
+ completeSurrender(MAX_ATTEMPTS);
 };
 function birthdayWishText(day=currentDay){
  const from=(day?.wishFrom||"").trim();
@@ -1819,7 +1849,7 @@ document.addEventListener("visibilitychange",()=>{
 if(navigator.storage?.persist) navigator.storage.persist().catch(()=>{});
 
 if("serviceWorker" in navigator){
- window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js?v=247").catch(()=>{}));
+ window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js?v=250").catch(()=>{}));
 }
 
 function syncDesktopFrame(){

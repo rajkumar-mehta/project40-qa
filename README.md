@@ -47,3 +47,14 @@ Known content placeholders retained by design: EXIT 25, 26, 36 and 40 currently 
 - PROD subjects begin with [PROD] automatically after promotion.
 - No gameplay, scoring, progress-storage, trusted-time, sequence, HONK, sticky UI, puzzle, or visual changes.
 - QA CNAME is qa.route4t.com.
+
+
+## v2.50 QA — QA Preview + One Bonus 4th Attempt
+- QA preview URL: https://qa.route4t.com/?preview=1
+- Preview is hard-gated to qa.route4t.com; the parameter cannot activate on route4t.com.
+- Preview reveals future EXITs, bypasses sequence gating, uses isolated preview progress, and suppresses Formspree.
+- Normal QA remains trusted-time/sequential and still sends one final [QA] Formspree notification per completed EXIT.
+- After 3 failed guesses, LET ME TRY ONE MORE TIME grants exactly one bonus 4th attempt.
+- A wrong bonus 4th attempt immediately records surrender; there is no repeat 3-attempt reset.
+- Existing PROD progress format and completed 1–3 attempt results remain valid.
+- HONK, sticky UI, artwork, puzzles/videos, and trusted-time logic are unchanged.
