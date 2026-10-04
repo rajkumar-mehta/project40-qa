@@ -241,9 +241,9 @@ const DAYS = [
   "day": 9,
   "date": "2026-10-06",
   "displayDate": "October 6, 2026",
-  "video": "https://youtu.be/cG0eOPmZUbo",
+  "video": "https://youtu.be/_c1vlWvXKes",
   "relation": "Friend",
-  "wishFrom": "Ashesh & Krishna",
+  "wishFrom": "Rushabh, Palak, Arav & Rian",
   "lines": [
    "Who is carrying you in her arms?"
   ],
@@ -258,9 +258,9 @@ const DAYS = [
   "day": 10,
   "date": "2026-10-07",
   "displayDate": "October 7, 2026",
-  "video": "https://youtu.be/bQa0x3hiDr0",
+  "video": "https://youtu.be/jexm_8zkQhc",
   "relation": "Friend",
-  "wishFrom": "ArChi",
+  "wishFrom": "Chirag & Ashesh Family",
   "lines": [
    "What was the color of the Scooty, from where you and Archana fell in the middle of the road ?"
   ],
@@ -348,9 +348,9 @@ const DAYS = [
   "day": 15,
   "date": "2026-10-12",
   "displayDate": "October 12, 2026",
-  "video": "https://youtu.be/_c1vlWvXKes",
+  "video": "https://youtube.com/shorts/wOAB3Q5k_qk?feature=share",
   "relation": "Friend",
-  "wishFrom": "Rushabh, Palak, Arav & Rian",
+  "wishFrom": "Jayshree",
   "lines": [
    "Where (City) was this picture taken ?"
   ],
@@ -620,9 +620,9 @@ const DAYS = [
   "day": 31,
   "date": "2026-10-28",
   "displayDate": "October 28, 2026",
-  "video": "https://youtube.com/shorts/SknlZ23htAU?feature=share",
+  "video": "https://youtube.com/shorts/54fL1VjiIyY?feature=share",
   "relation": "Cousin",
-  "wishFrom": "Jayshreeben, Neelamben & Rinku",
+  "wishFrom": "Poona Bapuji Family",
   "lines": [
    "What was the exact date (mm/dd/yyyy) when this picture was taken ?"
   ],
@@ -1869,7 +1869,7 @@ document.addEventListener("visibilitychange",()=>{
 if(navigator.storage?.persist) navigator.storage.persist().catch(()=>{});
 
 if("serviceWorker" in navigator){
- window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js?v=301").catch(()=>{}));
+ window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js?v=302").catch(()=>{}));
 }
 
 function syncDesktopFrame(){

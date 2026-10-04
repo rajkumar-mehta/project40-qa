@@ -66,3 +66,12 @@ Known content placeholders retained by design: EXIT 25, 26, 36 and 40 currently 
 - EXIT 40 legacy pale lavender finale text is explicitly replaced with high-contrast dark brown.
 - Reopening a completed EXIT 40 keeps the question/answer review, shows FINAL VIDEO COMING SOON when the final video is still TBD, and replays balloons/confetti.
 - No change to QA-only preview isolation, trusted-time protection, Formspree frequency/labels, saved-game keys, HONK, sticky scoreboard, EXIT layout, or the one-time bonus 4th attempt.
+
+
+## v3.02 PROD — YouTube assignment update
+- Based directly on cleaned v3.01 PROD.
+- EXITs 0–7 preserved exactly.
+- Updated future YouTube/person assignments from YT URL(5).xlsx.
+- No puzzle Q&A changes in this release.
+- No changes to saved-game storage, scoring, trusted time, Formspree, QA preview protection, bonus 4th attempt, HONK, sticky UI, or visuals.
+- Hidden/random QA URL feature remains intentionally not introduced.
