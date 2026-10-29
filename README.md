@@ -75,3 +75,12 @@ Known content placeholders retained by design: EXIT 25, 26, 36 and 40 currently 
 - No puzzle Q&A changes in this release.
 - No changes to saved-game storage, scoring, trusted time, Formspree, QA preview protection, bonus 4th attempt, HONK, sticky UI, or visuals.
 - Hidden/random QA URL feature remains intentionally not introduced.
+
+
+## v3.03 — YouTube update
+- Based directly on approved v3.02.
+- YouTube-only change: EXIT 36 (Anjani) now has its final video URL.
+- EXIT 40 remains the only TBD video.
+- No puzzle Q&A changes applied.
+- No changes to saved progress, scoring, trusted time, Formspree, QA preview, bonus 4th attempt, HONK, sticky UI, or visuals.
+- Hidden/random QA URL remains OFF.
