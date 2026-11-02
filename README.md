@@ -84,3 +84,12 @@ Known content placeholders retained by design: EXIT 25, 26, 36 and 40 currently 
 - No puzzle Q&A changes applied.
 - No changes to saved progress, scoring, trusted time, Formspree, QA preview, bonus 4th attempt, HONK, sticky UI, or visuals.
 - Hidden/random QA URL remains OFF.
+
+
+## v3.04 — YouTube update
+- Based directly on approved v3.03 PROD.
+- YouTube-only change: EXIT 36 (Anjani) video replaced with the latest URL from YT URL-11-2.xlsx.
+- EXIT 40 (Raj) remains the only TBD video.
+- No puzzle Q&A changes.
+- No changes to saved progress, scoring, trusted time, Formspree, QA preview, bonus 4th attempt, HONK, sticky UI, or visuals.
+- Hidden/random QA URL remains OFF.
