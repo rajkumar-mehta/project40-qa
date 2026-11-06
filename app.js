@@ -773,7 +773,7 @@ const DAYS = [
   "day": 40,
   "date": "2026-11-06",
   "displayDate": "November 6, 2026",
-  "video": null,
+  "video": "https://youtu.be/Bcro6zr4E9w",
   "relation": "Husband",
   "wishFrom": "Raj",
   "lines": [
@@ -1869,7 +1869,7 @@ document.addEventListener("visibilitychange",()=>{
 if(navigator.storage?.persist) navigator.storage.persist().catch(()=>{});
 
 if("serviceWorker" in navigator){
- window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js?v=304").catch(()=>{}));
+ window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js?v=305").catch(()=>{}));
 }
 
 function syncDesktopFrame(){

@@ -93,3 +93,13 @@ Known content placeholders retained by design: EXIT 25, 26, 36 and 40 currently 
 - No puzzle Q&A changes.
 - No changes to saved progress, scoring, trusted time, Formspree, QA preview, bonus 4th attempt, HONK, sticky UI, or visuals.
 - Hidden/random QA URL remains OFF.
+
+
+## v3.05 — Final YouTube update
+- Based directly on approved v3.04 PROD.
+- YouTube-only change: EXIT 40 (Raj) now has the final video URL.
+- No TBD videos remain.
+- EXIT 40 unlock remains 2026-11-06 at 12:01 AM ET.
+- No puzzle Q&A changes.
+- No changes to saved progress, scoring, trusted time, Formspree, QA preview, bonus 4th attempt, HONK, sticky UI, or visuals.
+- Hidden/random QA URL remains OFF.
